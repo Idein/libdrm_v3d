@@ -9,6 +9,48 @@
 #undef __user
 #include "drm/v3d_drm.h"
 
+
+#define DRM_V3D_BIT(n) (UINT32_C(1) << (n))
+
+#define DRM_V3D_MASK(high, low) \
+        ((DRM_V3D_BIT((high) - (low) + 1) - 1) << (low))
+
+#define DRM_V3D_SET_FIELD(value, field) \
+        (((value) << DRM_V3D_##field##_SHIFT) & DRM_V3D_##field##_MASK)
+
+/*
+ * These V3D register definitions are derived from
+ * linux/drivers/gpu/drm/v3d/v3d_regs.h, which is licensed under GPL-2.0+.
+ * The DRM_ prefix is added to the names and QUEUED_ morpheme is removed.
+ * Copyright (C) 2017-2018 Broadcom
+ */
+
+#define DRM_V3D_CSD_CFG0_NUM_WGS_X_MASK          DRM_V3D_MASK(31, 16)
+#define DRM_V3D_CSD_CFG0_NUM_WGS_X_SHIFT         16
+#define DRM_V3D_CSD_CFG0_WG_X_OFFSET_MASK        DRM_V3D_MASK(15, 0)
+#define DRM_V3D_CSD_CFG0_WG_X_OFFSET_SHIFT       0
+
+#define DRM_V3D_CSD_CFG1_NUM_WGS_Y_MASK          DRM_V3D_MASK(31, 16)
+#define DRM_V3D_CSD_CFG1_NUM_WGS_Y_SHIFT         16
+#define DRM_V3D_CSD_CFG1_WG_Y_OFFSET_MASK        DRM_V3D_MASK(15, 0)
+#define DRM_V3D_CSD_CFG1_WG_Y_OFFSET_SHIFT       0
+
+#define DRM_V3D_CSD_CFG2_NUM_WGS_Z_MASK          DRM_V3D_MASK(31, 16)
+#define DRM_V3D_CSD_CFG2_NUM_WGS_Z_SHIFT         16
+#define DRM_V3D_CSD_CFG2_WG_Z_OFFSET_MASK        DRM_V3D_MASK(15, 0)
+#define DRM_V3D_CSD_CFG2_WG_Z_OFFSET_SHIFT       0
+
+#define DRM_V3D_CSD_CFG3_OVERLAP_WITH_PREV       DRM_V3D_BIT(26)
+#define DRM_V3D_CSD_CFG3_MAX_SG_ID_MASK          DRM_V3D_MASK(25, 20)
+#define DRM_V3D_CSD_CFG3_MAX_SG_ID_SHIFT         20
+#define DRM_V3D_CSD_CFG3_BATCHES_PER_SG_M1_MASK  DRM_V3D_MASK(19, 12)
+#define DRM_V3D_CSD_CFG3_BATCHES_PER_SG_M1_SHIFT 12
+#define DRM_V3D_CSD_CFG3_WGS_PER_SG_MASK         DRM_V3D_MASK(11, 8)
+#define DRM_V3D_CSD_CFG3_WGS_PER_SG_SHIFT        8
+#define DRM_V3D_CSD_CFG3_WG_SIZE_MASK            DRM_V3D_MASK(7, 0)
+#define DRM_V3D_CSD_CFG3_WG_SIZE_SHIFT           0
+
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
