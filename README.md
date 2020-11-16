@@ -6,7 +6,7 @@ A thin userland wrapper for the V3D DRM driver.
 ## Running tests
 
 ```console
-$ git clone https://github.com/Terminus-IMRC/libdrm_v3d
+$ git clone https://github.com/Idein/libdrm_v3d
 $ cd libdrm_v3d/
 $ cmake .
 $ make
