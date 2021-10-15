@@ -1,0 +1,55 @@
+on: push
+
+jobs:
+
+  build-armhf-package:
+    runs-on: ubuntu-latest
+    container: debian:buster-slim
+    steps:
+      - name: Install cross toolchain
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          dpkg --add-architecture armhf
+          apt-get update
+          apt-get install -y --no-install-recommends crossbuild-essential-armhf cmake
+          apt-get clean
+          rm -rf /var/lib/apt/lists/*
+      - name: Checkout source tree
+        uses: actions/checkout@v2
+      - name: Build package
+        run: |
+          cmake -S . -B build/ -D BUILD_TESTING=FALSE -D CPACK_DEBIAN_PACKAGE_ARCHITECTURE=armhf -D CMAKE_C_COMPILER=arm-linux-gnueabihf-gcc -D CMAKE_C_FLAGS='-mcpu=cortex-a72 -mtune=cortex-a72 -mfloat-abi=hard -mfpu=neon-vfpv4'
+          cmake --build build/ --target package
+      - name: Upload package
+        uses: actions/upload-artifact@v2
+        with:
+          name: libdrm_v3d-0.0.0-armhf
+          path: build/libdrm_v3d_0.0.0_armhf.deb
+          if-no-files-found: error
+
+  build-arm64-package:
+    runs-on: ubuntu-latest
+    container: debian:buster-slim
+    steps:
+      - name: Install cross toolchain
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          dpkg --add-architecture arm64
+          apt-get update
+          apt-get install -y --no-install-recommends crossbuild-essential-arm64 cmake
+          apt-get clean
+          rm -rf /var/lib/apt/lists/*
+      - name: Checkout source tree
+        uses: actions/checkout@v2
+      - name: Build package
+        run: |
+          cmake -S . -B build/ -D BUILD_TESTING=FALSE -D CPACK_DEBIAN_PACKAGE_ARCHITECTURE=arm64 -D CMAKE_C_COMPILER=aarch64-linux-gnu-gcc -D CMAKE_C_FLAGS='-mcpu=cortex-a72 -mtune=cortex-a72'
+          cmake --build build/ --target package
+      - name: Upload package
+        uses: actions/upload-artifact@v2
+        with:
+          name: libdrm_v3d-0.0.0-arm64
+          path: build/libdrm_v3d_0.0.0_arm64.deb
+          if-no-files-found: error
